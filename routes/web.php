@@ -18,10 +18,16 @@ use App\Models\Customer;
 use App\Models\Sale;
 use App\Models\Salesman;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/make', function () {
+    dd(Hash::make('admin'));
+    // return view('welcome');
 });
 
 Route::middleware('guest')->group(function () {

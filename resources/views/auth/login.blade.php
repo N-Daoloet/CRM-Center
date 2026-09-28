@@ -7,6 +7,14 @@
     <link rel="stylesheet" href="{{ asset('css/crm.css') }}">
 </head>
 <body class="login-body">
+    <div class="app-loader login-loader" aria-hidden="true">
+        <div class="loader-orbit loader-orbit-one"></div>
+        <div class="loader-orbit loader-orbit-two"></div>
+        <div class="loader-core">CRM</div>
+        <div class="loader-brand">Signing in</div>
+        <div class="loader-progress"><span></span></div>
+    </div>
+
     <div class="login-orbs" aria-hidden="true">
         <span class="login-orb login-orb-one"></span>
         <span class="login-orb login-orb-two"></span>
@@ -25,7 +33,7 @@
             <div class="form-alert form-alert-error">{{ $errors->first() }}</div>
         @endif
 
-        <form method="POST" action="{{ route('login.attempt') }}">
+        <form id="loginForm" method="POST" action="{{ route('login.attempt') }}">
             @csrf
             <label for="email">Email</label>
             <input id="email" name="email" type="email" value="{{ old('email') }}" placeholder="nama@email.com" required>
@@ -38,7 +46,7 @@
                 <span>Remember me</span>
             </label>
 
-            <button type="submit">Sign In</button>
+            <button id="loginButton" type="submit">Sign In</button>
         </form>
 
         <div class="login-footer">
@@ -48,5 +56,17 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('loginForm')?.addEventListener('submit', function () {
+            document.querySelector('.login-loader')?.classList.add('is-visible');
+            const loginButton = document.getElementById('loginButton');
+
+            if (loginButton) {
+                loginButton.disabled = true;
+                loginButton.textContent = 'Signing in...';
+            }
+        });
+    </script>
 </body>
 </html>

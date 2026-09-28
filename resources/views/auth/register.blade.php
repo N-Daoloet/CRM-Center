@@ -36,5 +36,6 @@
             Sudah punya akun? <a href="{{ route('login') }}">Masuk di sini</a>
         </div>
     </div>
+    @include('partials.form-confirmation')
 </body>
 </html>

@@ -1,5 +1,15 @@
 <aside class="sidebar">
     <h2>CRM Center</h2>
+    @auth
+        <div class="sidebar-user">
+            <span class="sidebar-user-icon" aria-hidden="true">👤</span>
+            <div class="sidebar-user-details">
+                <span class="sidebar-user-label">เข้าสู่ระบบในชื่อ</span>
+                <strong>{{ auth()->user()->name }}</strong>
+                <small>{{ auth()->user()->email }}</small>
+            </div>
+        </div>
+    @endauth
     <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
         <span class="nav-icon">📊</span> Dashboard
     </a>
@@ -73,4 +83,32 @@
             </li>
         </ul>
     </details>
+
+    <form id="logoutForm" method="POST" action="{{ route('logout') }}" class="logout-form" data-skip-confirm>
+        @csrf
+        <button id="logoutButton" type="submit" class="logout-button">
+            <span class="nav-icon">↪</span> Logout
+        </button>
+    </form>
+
+    <div class="app-loader logout-loader" aria-hidden="true">
+        <div class="loader-orbit loader-orbit-one"></div>
+        <div class="loader-orbit loader-orbit-two"></div>
+        <div class="loader-core">CRM</div>
+        <div class="loader-brand">Signing out</div>
+        <div class="loader-progress"><span></span></div>
+    </div>
+
+    <script>
+        document.getElementById('logoutForm')?.addEventListener('submit', function () {
+            document.querySelector('.logout-loader')?.classList.add('is-visible');
+            const logoutButton = document.getElementById('logoutButton');
+
+            if (logoutButton) {
+                logoutButton.disabled = true;
+                logoutButton.innerHTML = '<span class="nav-icon">↪</span> Signing out...';
+            }
+        });
+    </script>
+    @include('partials.form-confirmation')
 </aside>

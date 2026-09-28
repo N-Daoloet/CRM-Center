@@ -298,7 +298,21 @@
             if (savedOption) savedOption.selected = true;
             productIdInput.value = savedOption ? savedOption.dataset.productId : '';
             campaignInput.value = savedOption ? savedOption.dataset.campaignId : '';
+            row.dataset.lastProductChoice = savedOption ? savedOption.value : '';
             renderCampaignBundleProducts(row, campaignInput.value);
+        }
+
+        function getItemChoiceKey(option) {
+            if (!option || !option.value) return '';
+            return option.dataset.campaignId
+                ? 'campaign:' + option.dataset.campaignId
+                : 'product:' + option.dataset.productId;
+        }
+
+        function syncRowWithChoice(row, option) {
+            row.querySelector('.item-product').value = option?.dataset.productId || '';
+            row.querySelector('.item-campaign').value = option?.dataset.campaignId || '';
+            renderCampaignBundleProducts(row, option?.dataset.campaignId || '');
         }
 
         function renderCampaignBundleProducts(row, campaignId) {
@@ -460,9 +474,28 @@
             populateItemProductSelect(row);
             productSelect.addEventListener('change', function () {
                 const selected = this.selectedOptions[0];
-                row.querySelector('.item-product').value = selected?.dataset.productId || '';
-                row.querySelector('.item-campaign').value = selected?.dataset.campaignId || '';
-                renderCampaignBundleProducts(row, selected?.dataset.campaignId || '');
+                const choiceKey = getItemChoiceKey(selected);
+                const duplicateRow = choiceKey && Array.from(document.querySelectorAll('#items_table tbody .item-row'))
+                    .find(otherRow => otherRow !== row && getItemChoiceKey(otherRow.querySelector('.item-product-choice').selectedOptions[0]) === choiceKey);
+
+                if (duplicateRow) {
+                    const addQuantity = Number(row.querySelector('.item-qty').value || 1);
+                    const duplicateName = selected.textContent.trim();
+                    if (window.confirm('เลือก ' + duplicateName + ' ไว้แล้ว ต้องการเพิ่มจำนวนสินค้านี้ใช่หรือไม่?')) {
+                        const duplicateQuantity = duplicateRow.querySelector('.item-qty');
+                        duplicateQuantity.value = Number(duplicateQuantity.value || 0) + addQuantity;
+                        row.remove();
+                        reindexRows();
+                    } else {
+                        this.value = row.dataset.lastProductChoice || '';
+                    }
+                    syncRowWithChoice(row, this.selectedOptions[0]);
+                    updateSummary();
+                    return;
+                }
+
+                row.dataset.lastProductChoice = this.value;
+                syncRowWithChoice(row, selected);
                 updateSummary();
             });
             row.querySelector('.item-qty').addEventListener('input', updateSummary);

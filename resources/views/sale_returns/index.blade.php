@@ -61,7 +61,7 @@
                                 <td>
                                     <div class="action-buttons">
                                         <a href="{{ route('sale-returns.edit', $return) }}" class="btn secondary small">แก้ไข</a>
-                                        <form method="POST" action="{{ route('sale-returns.destroy', $return) }}" onsubmit="return confirm('ยืนยันลบรายการคืนสินค้า?')">
+                                        <form method="POST" action="{{ route('sale-returns.destroy', $return) }}" data-confirm-title="ยืนยันลบรายการคืนสินค้า?" data-confirm-text="รายการที่ลบแล้วไม่สามารถกู้คืนได้" data-confirm-button="ลบรายการ">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn secondary small">ลบ</button>

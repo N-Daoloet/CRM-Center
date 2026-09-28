@@ -47,9 +47,7 @@
                             <input type="text" name="name" placeholder="เช่น แคมเปญลูกค้าชั้นนำ" required>
                         </label>
 
-                        <label>ประเภทแคมเปญ
-                            <input type="text" value="แคมเปญรายชื่อ" readonly>
-                        </label>
+                       
 
                         <label>วันที่เริ่มต้น
                             <input type="date" name="start_date" value="{{ date('Y-m-d') }}" required>
@@ -57,6 +55,9 @@
 
                         <label>วันที่สิ้นสุด
                             <input type="date" name="end_date" value="{{ date('Y-m-d', strtotime('+7 days')) }}" required>
+                        </label>
+                         <label>ประเภทแคมเปญ
+                            <input type="text" value="แคมเปญรายชื่อ" readonly>
                         </label>
 
                         <label class="full-span">รายละเอียดแคมเปญ

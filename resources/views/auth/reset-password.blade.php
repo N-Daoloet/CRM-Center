@@ -35,5 +35,6 @@
             <a href="{{ route('login') }}">Kembali ke login</a>
         </div>
     </div>
+    @include('partials.form-confirmation')
 </body>
 </html>

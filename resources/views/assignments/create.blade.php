@@ -226,14 +226,14 @@
                                 <input type="date" name="assigned_at" value="{{ old('assigned_at', now()->toDateString()) }}" required>
                             </label>
 
-                            <!-- <label class="full-span">
+                            <label class="full-span">
                                 สถานะ
                                 <select name="status" required>
                                     <option value="follow_up" @selected(old('status', 'follow_up') === 'follow_up')>กำลังติดตาม</option>
                                     <option value="pending" @selected(old('status') === 'pending')>รอการติดต่อ</option>
                                     <option value="completed" @selected(old('status') === 'completed')>เสร็จสิ้น</option>
                                 </select>
-                            </label> -->
+                            </label>
 
                             <label class="full-span">
                                 หมายเหตุ
