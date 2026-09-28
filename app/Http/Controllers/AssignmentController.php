@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\CustomerAssignment;
 use App\Models\User;
+use App\Notifications\CustomerAssignedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -60,10 +61,19 @@ class AssignmentController extends Controller
         }
 
         $affectedCount = 0;
+        $customerNames = Customer::query()
+            ->whereIn('id', $data['customer_ids'])
+            ->pluck('name', 'id');
 
-        DB::transaction(function () use ($data, &$affectedCount): void {
+        DB::transaction(function () use ($data, $salesman, $customerNames, &$affectedCount): void {
             foreach ($data['customer_ids'] as $customerId) {
-                CustomerAssignment::updateOrCreate(
+                $existingAssignment = CustomerAssignment::query()
+                    ->where('customer_id', $customerId)
+                    ->first();
+                $isNewAssignment = ! $existingAssignment
+                    || (int) $existingAssignment->salesman_id !== (int) $data['salesman_id'];
+
+                $assignment = CustomerAssignment::updateOrCreate(
                     ['customer_id' => $customerId],
                     [
                         'salesman_id' => $data['salesman_id'],
@@ -72,6 +82,13 @@ class AssignmentController extends Controller
                         'notes' => $data['notes'] ?? null,
                     ]
                 );
+
+                if ($isNewAssignment) {
+                    $salesman->notify(new CustomerAssignedNotification(
+                        $assignment->id,
+                        $customerNames->get($customerId, 'ลูกค้า')
+                    ));
+                }
 
                 $affectedCount++;
             }

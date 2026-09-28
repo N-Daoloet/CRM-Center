@@ -202,6 +202,22 @@ Route::post('/salesmen/{salesman}/team/target', [SalesmanController::class, 'tea
     Route::post('/assignments', [AssignmentController::class, 'store'])->name('assignments.store');
 
     Route::get('/sales-dashboard', function () {
-        return view('sales.dashboard');
+        $user = auth()->user();
+        $unreadNotifications = $user
+            ? $user->unreadNotifications()->latest()->take(5)->get()
+            : collect();
+        $unreadNotificationCount = $user ? $user->unreadNotifications()->count() : 0;
+
+        return view('sales.dashboard', compact('unreadNotifications', 'unreadNotificationCount'));
     })->name('sales.dashboard');
+
+    Route::post('/sales-dashboard/notifications/{notification}/read', function (string $notification) {
+        $unreadNotification = auth()->user()
+            ->unreadNotifications()
+            ->whereKey($notification)
+            ->firstOrFail();
+        $unreadNotification->markAsRead();
+
+        return back();
+    })->middleware('auth')->name('sales.notifications.read');
 // });

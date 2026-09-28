@@ -14,8 +14,8 @@
     </div>
 
     <div class="login-card">
-        <h1>Masuk</h1>
-        <p>Silakan masuk ke akun CRM Center Anda</p>
+        <h1>Sign In</h1>
+        <p>Sign in to your CRM Center account</p>
 
         @if (session('status'))
             <div class="form-alert form-alert-success">{{ session('status') }}</div>
@@ -38,13 +38,13 @@
                 <span>Remember me</span>
             </label>
 
-            <button type="submit">Masuk</button>
+            <button type="submit">Sign In</button>
         </form>
 
         <div class="login-footer">
             <div class="login-links">
-                <a href="{{ route('password.request') }}">Lupa password?</a>
-                <a href="{{ route('register') }}">Daftar akun baru</a>
+                <a href="{{ route('password.request') }}">Forgot password?</a>
+                <!-- <a href="{{ route('register') }}">Create a new account</a> -->
             </div>
         </div>
     </div>

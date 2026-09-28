@@ -182,6 +182,73 @@ body {
     box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
 }
 
+.dashboard-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.notification-menu {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.notification-trigger {
+    position: relative;
+    display: grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    color: var(--color-primary-dark);
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    cursor: pointer;
+    list-style: none;
+}
+
+.notification-trigger::-webkit-details-marker { display: none; }
+.notification-trigger svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.notification-count {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    background: var(--color-danger);
+    border: 2px solid #fff;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.notification-dropdown {
+    position: absolute;
+    z-index: 5;
+    top: calc(100% + 10px);
+    right: 0;
+    width: min(340px, calc(100vw - 40px));
+    padding: 16px;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+}
+
+.notification-dropdown h2 { margin: 0 0 8px; font-size: 16px; }
+.notification-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--color-border); }
+.notification-item strong { font-size: 13px; }
+.notification-item p { margin: 4px 0; font-size: 14px; }
+.notification-item time { color: var(--color-text-muted); font-size: 12px; }
+.notification-dismiss { padding: 6px 8px; color: var(--color-primary-dark); background: var(--color-primary-light); border: 0; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+.notification-empty { margin: 12px 0 4px; color: var(--color-text-muted); font-size: 14px; }
+
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));

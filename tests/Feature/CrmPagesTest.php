@@ -26,6 +26,41 @@ class CrmPagesTest extends TestCase
         }
     }
 
+    public function test_sales_dashboard_shows_and_dismisses_new_customer_assignment_notifications(): void
+    {
+        $salesman = User::factory()->create(['role' => 'sale']);
+        $customer = Customer::create([
+            'name' => 'Assigned Customer',
+            'email' => 'assigned@example.com',
+            'phone' => '0812345678',
+            'address' => 'Bangkok',
+        ]);
+
+        $this->actingAs($salesman);
+        $assignmentData = [
+            'customer_ids' => [$customer->id],
+            'salesman_id' => $salesman->id,
+            'assigned_at' => now()->toDateString(),
+            'status' => 'follow_up',
+        ];
+
+        $this->post('/assignments', $assignmentData)->assertRedirect('/assignments');
+        $this->post('/assignments', $assignmentData)->assertRedirect('/assignments');
+
+        $this->assertDatabaseCount('notifications', 1);
+        $notification = $salesman->unreadNotifications()->firstOrFail();
+
+        $this->get('/sales-dashboard')
+            ->assertOk()
+            ->assertSee('notification-count')
+            ->assertSee('Assigned Customer');
+
+        $this->post(route('sales.notifications.read', $notification->id));
+
+        $this->assertNotNull($notification->fresh()->read_at);
+        $this->get('/sales-dashboard')->assertDontSee('notification-count');
+    }
+
     public function test_customer_search_filters_results(): void
     {
         $this->actingAs(User::factory()->create());

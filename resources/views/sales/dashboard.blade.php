@@ -12,8 +12,40 @@
 
         <main class="content">
             <div class="card">
-                <h1>Dashboard พนักงานขาย</h1>
-                <p>ข้อมูลสรุปสำหรับพนักงานขายของคุณ</p>
+                <div class="dashboard-heading">
+                    <div>
+                        <h1>Dashboard พนักงานขาย</h1>
+                        <p>ข้อมูลสรุปสำหรับพนักงานขายของคุณ</p>
+                    </div>
+                    <details class="notification-menu">
+                        <summary class="notification-trigger" aria-label="การแจ้งเตือน" title="การแจ้งเตือน">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" />
+                            </svg>
+                            @if ($unreadNotificationCount > 0)
+                                <span class="notification-count">{{ $unreadNotificationCount > 99 ? '99+' : $unreadNotificationCount }}</span>
+                            @endif
+                        </summary>
+                        <div class="notification-dropdown">
+                            <h2>การแจ้งเตือน</h2>
+                            @forelse ($unreadNotifications as $notification)
+                                <div class="notification-item">
+                                    <div>
+                                        <strong>ได้รับมอบหมายลูกค้าใหม่</strong>
+                                        <p>{{ $notification->data['customer_name'] ?? 'ลูกค้า' }}</p>
+                                        <time>{{ $notification->created_at->diffForHumans() }}</time>
+                                    </div>
+                                    <form method="POST" action="{{ route('sales.notifications.read', $notification->id) }}">
+                                        @csrf
+                                        <button type="submit" class="notification-dismiss" aria-label="รับทราบการแจ้งเตือน">รับทราบ</button>
+                                    </form>
+                                </div>
+                            @empty
+                                <p class="notification-empty">ไม่มีการแจ้งเตือนใหม่</p>
+                            @endforelse
+                        </div>
+                    </details>
+                </div>
 
                 <div class="stats-grid">
                     <div class="stat-card">
